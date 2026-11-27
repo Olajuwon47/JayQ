@@ -4,7 +4,6 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
-import { hasActiveStudentProfile } from "@/lib/supabase/roles";
 
 export async function updateOwnProfileAction(_previousState, formData) {
   const supabase = await createClient();
@@ -15,9 +14,6 @@ export async function updateOwnProfileAction(_previousState, formData) {
     return { error: "You are not authorized to edit this profile.", success: "" };
   }
 
-  if (!(await hasActiveStudentProfile(supabase, claims.sub))) {
-    return { error: "Your student account is inactive or unavailable. Contact your administrator.", success: "" };
-  }
   const fullName = String(formData.get("fullName") || "").trim();
   const studentId = String(formData.get("studentId") || "").trim();
 
@@ -55,9 +51,6 @@ export async function changeOwnPasswordAction(_previousState, formData) {
     return { error: "You are not authorized to change this password.", success: "" };
   }
 
-  if (!(await hasActiveStudentProfile(supabase, claims.sub))) {
-    return { error: "Your student account is inactive or unavailable. Contact your administrator.", success: "" };
-  }
   const currentPassword = String(formData.get("currentPassword") || "");
   const newPassword = String(formData.get("newPassword") || "");
   const confirmPassword = String(formData.get("confirmPassword") || "");
@@ -91,9 +84,6 @@ export async function completeRequiredPasswordChangeAction(_previousState, formD
     return { error: "Password setup is not available for this account." };
   }
 
-  if (!(await hasActiveStudentProfile(supabase, claims.sub))) {
-    return { error: "Your student account is inactive or unavailable. Contact your administrator.", success: "" };
-  }
   const { data: authenticatedUserResult, error: authenticatedUserError } = await supabase.auth.getUser();
   const currentUser = authenticatedUserResult?.user;
 

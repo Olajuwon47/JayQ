@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { connection } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { canAccessStudentResource } from "./student-access.mjs";
 
 export async function getVerifiedClaims() {
   await connection();
@@ -15,8 +16,13 @@ export async function getVerifiedClaims() {
   return data.claims;
 }
 
-export async function hasActiveStudentProfile(supabase, userId) {
-  if (!userId) return false;
+/**
+ * Call from the server-side quiz start action before creating an attempt.
+ * Account, profile, and result access use the role gate and remain available
+ * to deactivated students.
+ */
+export async function canStudentStartQuiz(supabase, userId, role) {
+  if (role !== "student" || !userId) return false;
 
   const { data: profile, error } = await supabase
     .from("profiles")
@@ -24,7 +30,10 @@ export async function hasActiveStudentProfile(supabase, userId) {
     .eq("id", userId)
     .maybeSingle();
 
-  return !error && profile?.active === true;
+  if (error || typeof profile?.active !== "boolean") return false;
+
+  const status = profile.active ? "active" : "deactivated";
+  return canAccessStudentResource("quiz-start", { role, status }) === true;
 }
 
 export async function requireRole(requiredRole) {
@@ -54,11 +63,6 @@ export async function requireRole(requiredRole) {
     const user = userResult?.user;
 
     if (userError || !user || user.id !== claims.sub || user.app_metadata?.role !== "student") {
-      redirect("/login");
-    }
-
-    if (!(await hasActiveStudentProfile(supabase, user.id))) {
-      await supabase.auth.signOut();
       redirect("/login");
     }
 

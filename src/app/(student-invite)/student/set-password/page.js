@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Suspense } from "react";
 import { redirect } from "next/navigation";
 import AuthLoading from "@/components/auth-loading";
-import { getVerifiedClaims, hasActiveStudentProfile } from "@/lib/supabase/roles";
+import { getVerifiedClaims } from "@/lib/supabase/roles";
 import { createClient } from "@/lib/supabase/server";
 import StudentPasswordSetupForm from "./student-password-setup-form";
 
@@ -36,10 +36,6 @@ async function FirstSignInPasswordSetup() {
 
   if (userError || !user || user.id !== claims.sub) redirect("/login");
   if (user.app_metadata?.role !== "student") redirect("/account");
-  if (!(await hasActiveStudentProfile(supabase, user.id))) {
-    await supabase.auth.signOut();
-    redirect("/login");
-  }
 
   if (user.app_metadata?.must_set_password !== true) redirect("/student/dashboard");
 

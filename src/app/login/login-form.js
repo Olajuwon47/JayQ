@@ -40,24 +40,6 @@ export default function LoginForm({ requiredRole }) {
         return;
       }
 
-      if (requiredRole === "student") {
-        const studentId = claimsResult?.claims?.sub;
-        const { data: profile, error: profileError } = await supabase
-          .from("profiles")
-          .select("active")
-          .eq("id", studentId || "")
-          .maybeSingle();
-
-        if (profileError || profile?.active !== true) {
-          await supabase.auth.signOut();
-          setErrorMessage(
-            profile?.active === false
-              ? "Your student account is inactive. Contact your administrator."
-              : "Your student account could not be verified. Contact your administrator.",
-          );
-          return;
-        }
-      }
       router.replace(requiredRole === "admin" ? "/admin/dashboard" : "/student/dashboard");
       router.refresh();
     } catch {
