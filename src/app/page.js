@@ -1,4 +1,4 @@
-﻿import Link from "next/link";
+import Link from "next/link";
 import { ArrowDown, ArrowRight, Check, Clock3, LockKeyhole, Sparkles } from "lucide-react";
 
 function BrandMark({ light = false }) {
@@ -17,7 +17,7 @@ export default function Home() {
       <header className="site-header"><div className="site-header-inner">
         <Link className="brand" href="/" aria-label="JayQ home"><BrandMark /><span>jayq</span></Link>
         <nav className="main-nav" aria-label="Main navigation"><a href="#how-it-works">How it works</a><a href="#for-schools">For schools</a></nav>
-        <Link className="button button-dark header-signin" href="/login">Sign in <ArrowRight size={16} /></Link>
+        <Link className="button button-dark header-signin" href="/login">Student sign in <ArrowRight size={16} /></Link>
       </div></header>
 
       <section className="hero section-wrap">
@@ -25,7 +25,7 @@ export default function Home() {
           <div className="eyebrow"><span className="eyebrow-dot" /> Online assessment, made clearer</div>
           <h1>Good assessments make room for <span>real progress.</span></h1>
           <p className="hero-description">JayQ gives schools one clear place to create timed assessments, guide students through them, and share results with confidence.</p>
-          <div className="hero-actions"><Link className="button button-lime" href="/login">Sign in to JayQ <ArrowRight size={17} /></Link><a className="text-link" href="#how-it-works">Explore the platform <ArrowDown size={16} /></a></div>
+          <div className="hero-actions"><Link className="button button-lime" href="/login">Student sign in to JayQ <ArrowRight size={17} /></Link><a className="text-link" href="#how-it-works">Explore the platform <ArrowDown size={16} /></a></div>
           <div className="hero-note"><span className="note-check"><Check size={13} strokeWidth={3} /></span>Built for thoughtful, focused assessments</div>
         </div>
         <div className="hero-visual" aria-label="Illustration of a timed JayQ assessment">
@@ -54,9 +54,8 @@ export default function Home() {
         ))}</div>
       </section>
 
-      <section className="closing-cta section-wrap"><div className="closing-cta-inner"><div><p className="section-kicker">YOUR NEXT STEP STARTS HERE</p><h2>Ready when you are.</h2><p>Sign in to see your JayQ workspace.</p></div><Link className="button button-lime" href="/login">Sign in <ArrowRight size={17} /></Link><div className="cta-decoration" aria-hidden="true"><BrandMark light /></div></div></section>
+      <section className="closing-cta section-wrap"><div className="closing-cta-inner"><div><p className="section-kicker">YOUR NEXT STEP STARTS HERE</p><h2>Ready when you are.</h2><p>Sign in to see your JayQ workspace.</p></div><Link className="button button-lime" href="/login">Student sign in <ArrowRight size={17} /></Link><div className="cta-decoration" aria-hidden="true"><BrandMark light /></div></div></section>
       <footer className="site-footer"><Link className="brand footer-brand" href="/"><BrandMark /><span>jayq</span></Link><span>Clear assessments. Confident progress.</span><span>© 2026 JayQ</span></footer>
     </main>
   );
 }
-

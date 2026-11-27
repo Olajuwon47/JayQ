@@ -15,6 +15,18 @@ export async function getVerifiedClaims() {
   return data.claims;
 }
 
+export async function hasActiveStudentProfile(supabase, userId) {
+  if (!userId) return false;
+
+  const { data: profile, error } = await supabase
+    .from("profiles")
+    .select("active")
+    .eq("id", userId)
+    .maybeSingle();
+
+  return !error && profile?.active === true;
+}
+
 export async function requireRole(requiredRole) {
   const claims = await getVerifiedClaims();
 
@@ -34,6 +46,25 @@ export async function requireRole(requiredRole) {
     }
 
     redirect("/account");
+  }
+
+  if (requiredRole === "student") {
+    const supabase = await createClient();
+    const { data: userResult, error: userError } = await supabase.auth.getUser();
+    const user = userResult?.user;
+
+    if (userError || !user || user.id !== claims.sub || user.app_metadata?.role !== "student") {
+      redirect("/login");
+    }
+
+    if (!(await hasActiveStudentProfile(supabase, user.id))) {
+      await supabase.auth.signOut();
+      redirect("/login");
+    }
+
+    if (user.app_metadata?.must_set_password === true) {
+      redirect("/student/set-password");
+    }
   }
 
   return claims;

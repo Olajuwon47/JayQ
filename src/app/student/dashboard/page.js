@@ -21,13 +21,14 @@ export default function StudentDashboardPage() {
         <p className="section-kicker">STUDENT WORKSPACE</p>
         <h1>Welcome to JayQ.</h1>
         <p className="login-copy">You are signed in as a student.</p>
-        <Suspense fallback={<p className="account-email">Loading account…</p>}>
+        <Suspense fallback={<p className="account-email">Loading accountâ€¦</p>}>
           <StudentAccountEmail />
         </Suspense>
         <div className="login-notice"><span className="notice-dot" />Your assigned quizzes will appear here.</div>
+        <Link className="button button-dark account-home" href="/student/profile">Manage my account <ArrowRight size={16} /></Link>
         <Link className="button button-dark account-home" href="/">Return to homepage <ArrowRight size={16} /></Link>
       </section>
-      <footer className="login-footer">JayQ · Clear assessments. Confident progress.</footer>
+      <footer className="login-footer">JayQ Â· Clear assessments. Confident progress.</footer>
     </main>
   );
 }

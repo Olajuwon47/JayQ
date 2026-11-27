@@ -1,11 +1,11 @@
-﻿"use client";
+"use client";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowRight } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 
-export default function LoginForm() {
+export default function LoginForm({ requiredRole }) {
   const router = useRouter();
   const [errorMessage, setErrorMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -27,7 +27,38 @@ export default function LoginForm() {
         return;
       }
 
-      router.replace("/account");
+      const { data: claimsResult, error: claimsError } = await supabase.auth.getClaims();
+      const authenticatedRole = claimsResult?.claims?.app_metadata?.role;
+
+      if (claimsError || authenticatedRole !== requiredRole) {
+        await supabase.auth.signOut();
+        setErrorMessage(
+          requiredRole === "admin"
+            ? "Use an administrator account for Admin sign in."
+            : "Use a student account for Student sign in.",
+        );
+        return;
+      }
+
+      if (requiredRole === "student") {
+        const studentId = claimsResult?.claims?.sub;
+        const { data: profile, error: profileError } = await supabase
+          .from("profiles")
+          .select("active")
+          .eq("id", studentId || "")
+          .maybeSingle();
+
+        if (profileError || profile?.active !== true) {
+          await supabase.auth.signOut();
+          setErrorMessage(
+            profile?.active === false
+              ? "Your student account is inactive. Contact your administrator."
+              : "Your student account could not be verified. Contact your administrator.",
+          );
+          return;
+        }
+      }
+      router.replace(requiredRole === "admin" ? "/admin/dashboard" : "/student/dashboard");
       router.refresh();
     } catch {
       setErrorMessage("Unable to reach JayQ right now. Check your connection and try again.");
@@ -44,7 +75,7 @@ export default function LoginForm() {
       <input id="password" name="password" type="password" placeholder="Enter your password" autoComplete="current-password" required />
       {errorMessage ? <p className="login-error" role="alert">{errorMessage}</p> : null}
       <button className="button button-dark login-submit" type="submit" disabled={isSubmitting}>
-        {isSubmitting ? "Signing in…" : "Sign in"} <ArrowRight size={16} />
+        {isSubmitting ? "Signing in…" : requiredRole === "admin" ? "Admin sign in" : "Student sign in"} <ArrowRight size={16} />
       </button>
     </form>
   );

@@ -1,4 +1,4 @@
-﻿import Link from "next/link";
+import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import LoginForm from "./login-form";
 
@@ -17,11 +17,11 @@ export default function LoginPage() {
       </div>
       <section className="login-card">
         <div className="login-mark"><BrandMark /></div>
-        <p className="section-kicker">WELCOME TO JAYQ</p>
-        <h1>Sign in to continue.</h1>
+        <p className="section-kicker">STUDENT SIGN IN</p>
+        <h1>Student sign in to continue.</h1>
         <p className="login-copy">Your assessments and results, all in one place.</p>
         <p className="login-help login-intro">Use the account your administrator created.</p>
-        <LoginForm />
+        <LoginForm requiredRole="student" />
       </section>
       <footer className="login-footer">JayQ · Clear assessments. Confident progress.</footer>
     </main>

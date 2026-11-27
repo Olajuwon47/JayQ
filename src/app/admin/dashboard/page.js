@@ -21,13 +21,14 @@ export default function AdminDashboardPage() {
         <p className="section-kicker">ADMINISTRATOR WORKSPACE</p>
         <h1>Welcome to JayQ.</h1>
         <p className="login-copy">You are signed in as an administrator.</p>
-        <Suspense fallback={<p className="account-email">Loading account…</p>}>
+        <Suspense fallback={<p className="account-email">Loading account...</p>}>
           <AdminAccountEmail />
         </Suspense>
-        <div className="login-notice"><span className="notice-dot" />Quiz and student management will be added in the next phases.</div>
-        <Link className="button button-dark account-home" href="/">Return to homepage <ArrowRight size={16} /></Link>
+        <div className="login-notice"><span className="notice-dot" />Review student account profiles and status.</div>
+        <Link className="button button-dark account-home" href="/admin/students">Manage students <ArrowRight size={16} /></Link>
+        <Link className="login-home-link admin-home-link" href="/">Return to homepage</Link>
       </section>
-      <footer className="login-footer">JayQ · Clear assessments. Confident progress.</footer>
+      <footer className="login-footer">JayQ - Clear assessments. Confident progress.</footer>
     </main>
   );
 }
