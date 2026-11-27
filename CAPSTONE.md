@@ -152,6 +152,13 @@ The original policy destructured its second argument directly. Malformed or miss
 
 ## 7. Tests and verification evidence
 
+### Final commit
+
+- Commit: [509b38a Harden student access policy tests](https://github.com/Olajuwon47/JayQ/commit/509b38a5f6117e0418f5938490e1d64f0e5d030d)
+- Screenshot: [GitHub commit view](./public/github-commit-509b38a.png)
+
+![GitHub commit 509b38a](./public/github-commit-509b38a.png)
+
 The repository now includes a standard test script and expanded policy tests.
 
 The smallest verification commands are:
