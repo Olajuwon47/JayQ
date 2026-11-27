@@ -56,3 +56,29 @@ test("unknown resources are denied", () => {
     false,
   );
 });
+
+test("malformed context is denied without throwing", () => {
+  for (const context of [undefined, null, false, "student", 42]) {
+    assert.doesNotThrow(() => {
+      assert.equal(canAccessStudentResource("account", context), false);
+    });
+  }
+});
+
+test("missing or unknown roles are denied", () => {
+  for (const role of [undefined, null, "", "teacher", "guest"]) {
+    assert.equal(
+      canAccessStudentResource("account", { role, status: "active" }),
+      false,
+    );
+  }
+});
+
+test("missing or unknown statuses remain undecided for students", () => {
+  for (const status of [undefined, null, "", "pending", "archived"]) {
+    assert.equal(
+      canAccessStudentResource("account", { role: "student", status }),
+      null,
+    );
+  }
+});

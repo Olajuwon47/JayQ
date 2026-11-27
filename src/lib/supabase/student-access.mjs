@@ -4,7 +4,10 @@ const STUDENT_AREAS_AVAILABLE_WHEN_DEACTIVATED = new Set([
   "results",
 ]);
 
-export function canAccessStudentResource(resource, { role, status }) {
+export function canAccessStudentResource(resource, context = {}) {
+  if (!context || typeof context !== "object") return false;
+
+  const { role, status } = context;
   if (role !== "student") return false;
 
   // Only active and deactivated are currently defined. Leave other states undecided.
